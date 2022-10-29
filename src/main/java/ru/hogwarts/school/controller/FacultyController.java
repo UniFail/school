@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.records.FacultyRecord;
+import ru.hogwarts.school.records.StudentRecord;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
@@ -34,8 +36,8 @@ public class FacultyController {
     }
 
     @PutMapping
-    public ResponseEntity<Faculty> editFaculty(@RequestBody Long id,Faculty faculty) {
-        Faculty foundFaculty = facultyService.editFaculty(id,faculty);
+    public ResponseEntity<FacultyRecord> editFaculty(@RequestBody Long id, FacultyRecord faculty) {
+        FacultyRecord foundFaculty = facultyService.editFaculty(id,faculty);
         if (foundFaculty == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -49,7 +51,17 @@ public class FacultyController {
     }
 
     @GetMapping
-    public Collection<Faculty> findByColor(String color){
+    public Collection<FacultyRecord> findByColor(String color){
         return facultyService.findByColor(color);
+    }
+
+    @GetMapping(params = "NameOrColor")
+    public Collection<FacultyRecord> findByNameOrColor(String nameOrName){
+        return facultyService.findByNameOrColor(nameOrName);
+    }
+
+    @GetMapping("/{id}/students")
+    public Collection<StudentRecord> getStudentByFaculty(Long id){
+        return facultyService.getStudentsByFaculty(id);
     }
 }

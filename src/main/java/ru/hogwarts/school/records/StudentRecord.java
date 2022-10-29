@@ -14,6 +14,7 @@ public class StudentRecord {
         @NotBlank(message = "Age of student is empty")
         private Integer age;
 
+        private FacultyRecord faculty;
         public StudentRecord(){
 
         }
@@ -40,5 +41,13 @@ public class StudentRecord {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public FacultyRecord getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(FacultyRecord faculty) {
+        this.faculty = faculty;
     }
 }

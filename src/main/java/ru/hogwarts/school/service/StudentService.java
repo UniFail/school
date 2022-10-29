@@ -50,5 +50,12 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
+    public Collection<StudentRecord> findByAgeBetween(Integer min, Integer max){
+        return studentRepository.findByAgeBetween(min,max).stream()
+                .map(recordmapper::toRecord)
+                .filter(age -> age.getAge() >= min && age.getAge() <= max)
+                .collect(Collectors.toList());
+    }
+
 }
 
