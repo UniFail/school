@@ -47,4 +47,9 @@ public class FacultyController {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping
+    public Collection<Faculty> findByColor(String color){
+        return facultyService.findByColor(color);
+    }
 }
