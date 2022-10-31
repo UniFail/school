@@ -3,7 +3,9 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.records.FacultyRecord;
 import ru.hogwarts.school.records.StudentRecord;
 import ru.hogwarts.school.service.StudentService;
 
@@ -38,7 +40,7 @@ public class StudentController {
     public ResponseEntity<StudentRecord> editStudent(@RequestBody long id,StudentRecord student) {
         StudentRecord foundStudent = studentService.editStudent(id,student);
         if (foundStudent == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(foundStudent);
     }
@@ -50,11 +52,17 @@ public class StudentController {
     }
 
     @GetMapping
-    public Collection<StudentRecord> findByAge(Integer age){
+    public Collection<StudentRecord> findByAge(@RequestParam Integer age){
         return studentService.findByAge(age);
     }
     @GetMapping
-    public Collection<StudentRecord> findByAgeBetween(Integer min, Integer max){
+    public Collection<StudentRecord> findByAgeBetween(@RequestParam Integer min,@RequestParam Integer max){
         return studentService.findByAgeBetween(min,max);
+    }
+
+    @GetMapping("/{id}/faculty")
+    public Collection<FacultyRecord> getFacultyByStudent(@RequestParam Long id){
+
+        return studentService.getStudentsByFaculty(id);
     }
 }

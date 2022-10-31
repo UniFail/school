@@ -39,7 +39,7 @@ public class FacultyController {
     public ResponseEntity<FacultyRecord> editFaculty(@RequestBody Long id, FacultyRecord faculty) {
         FacultyRecord foundFaculty = facultyService.editFaculty(id,faculty);
         if (foundFaculty == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(foundFaculty);
     }
@@ -56,12 +56,12 @@ public class FacultyController {
     }
 
     @GetMapping(params = "NameOrColor")
-    public Collection<FacultyRecord> findByNameOrColor(String nameOrName){
+    public Collection<FacultyRecord> findByNameOrColor(@RequestParam String nameOrName){
         return facultyService.findByNameOrColor(nameOrName);
     }
 
     @GetMapping("/{id}/students")
-    public Collection<StudentRecord> getStudentByFaculty(Long id){
+    public Collection<StudentRecord> getStudentByFaculty(@PathVariable Long id){
         return facultyService.getStudentsByFaculty(id);
     }
 }

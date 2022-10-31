@@ -2,8 +2,11 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.component.RecordMapper;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.records.FacultyRecord;
 import ru.hogwarts.school.records.StudentRecord;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -53,8 +56,15 @@ public class StudentService {
     public Collection<StudentRecord> findByAgeBetween(Integer min, Integer max){
         return studentRepository.findByAgeBetween(min,max).stream()
                 .map(recordmapper::toRecord)
-                .filter(age -> age.getAge() >= min && age.getAge() <= max)
                 .collect(Collectors.toList());
+    }
+
+    public Collection<FacultyRecord> getStudentsByFaculty(Long id){
+        return studentRepository.findById(id)
+                .map(Student::getFaculty)
+                .stream()
+                .map(recordmapper::toRecord)
+                                .collect(Collectors.toList());
     }
 
 }

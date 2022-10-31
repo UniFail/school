@@ -10,7 +10,7 @@ public class FacultyRecord {
     @NotBlank(message = "Name of faculty is empty")
     private String name;
 
-    @NotBlank(message = "Color of faculry is empty")
+    @NotBlank(message = "Color of faculty is empty")
     private String color;
 
     public FacultyRecord(){
