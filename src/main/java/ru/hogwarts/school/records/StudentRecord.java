@@ -3,21 +3,22 @@ package ru.hogwarts.school.records;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import ru.hogwarts.school.model.Student;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+//Обычный класс для работы с сущностями дто
 public class StudentRecord {
         private Long id;
 
         @NotBlank(message = "Name of student is empty")
         private String name;
 
-        @NotBlank(message = "Age of student is empty")
+        @Min(value = 12, message = "Min age is 12 years!")
+        @Max(value = 25, message = "Max age is 25 years!")
         private Integer age;
 
         private FacultyRecord faculty;
-        public StudentRecord(){
-
-        }
 
     public Long getId() {
         return id;

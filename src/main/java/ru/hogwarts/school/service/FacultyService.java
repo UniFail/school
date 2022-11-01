@@ -30,29 +30,21 @@ public class FacultyService {
         return recordmapper.toRecord(facultyRepository.save(recordmapper.toEntity(facultyRecord)));
     }
 
-    public FacultyRecord read(Long id){
-        return recordmapper.toRecord(facultyRepository.findById(id).orElseThrow(() -> new FacultyNotFoundException()));
+    public FacultyRecord read(long id){
+        return recordmapper.toRecord(facultyRepository.findById(id).orElseThrow(() -> new FacultyNotFoundException(id)));
     }
-    public Faculty addFaculty(Faculty faculty) {
-        return facultyRepository.save(faculty);
-    }
-
-    public Faculty findFaculty(Long id) {
-
-        return facultyRepository.findById(id).get();
-    }
-
-    public FacultyRecord editFaculty(Long id, FacultyRecord facultyRecord) {
-        Faculty oldFaculty = facultyRepository.findById(id).orElseThrow(() -> new FacultyNotFoundException());
-        oldFaculty.setName(facultyRecord.getName());
-        oldFaculty.setColor(facultyRecord.getColor());
+    public FacultyRecord update(long id, FacultyRecord facultyRecord) {
+        Faculty oldFaculty = facultyRepository.findById(id).orElseThrow(() -> new FacultyNotFoundException(id)); //Достаем из базы запись
+        oldFaculty.setName(facultyRecord.getName());                                                             //Апдейт полей
+        oldFaculty.setColor(facultyRecord.getColor());                                                           //Сохранение работает если сущность есть в базе и есть id
         return recordmapper.toRecord(facultyRepository.save(oldFaculty));
 
     }
 
-    public void deleteFaculty(long id) {
-
-        facultyRepository.findById(id);
+    public FacultyRecord delete(long id) {
+       Faculty faculty = facultyRepository.findById(id).orElseThrow(() -> new FacultyNotFoundException(id));
+       facultyRepository.delete(faculty);
+       return recordmapper.toRecord(faculty);
     }
 
 
@@ -63,18 +55,18 @@ public class FacultyService {
     }
 
     public Collection<FacultyRecord> findByNameOrColor(String colorOrName){
-        return facultyRepository.findByNameOrColor(colorOrName,colorOrName).stream()
+        return facultyRepository.findByNameOrColorIgnoreCase(colorOrName,colorOrName).stream()
                 .map(recordmapper::toRecord)
                 .collect(Collectors.toList());
     }
-    public Collection<StudentRecord> getStudentsByFaculty(Long id){
+    public Collection<StudentRecord> getStudentsByFaculty(long id){
         return facultyRepository.findById(id)
                 .map(Faculty::getStudents)
                 .map(students ->
                         students.stream()
                                 .map(recordmapper::toRecord)
                                 .collect(Collectors.toList()))
-                .orElseThrow(() -> new FacultyNotFoundException());
+                .orElseThrow(() -> new FacultyNotFoundException(id));
     }
 
 }

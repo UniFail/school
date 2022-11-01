@@ -1,6 +1,5 @@
 package ru.hogwarts.school.records;
 
-import ru.hogwarts.school.model.Faculty;
 
 import javax.validation.constraints.NotBlank;
 
@@ -12,17 +11,6 @@ public class FacultyRecord {
 
     @NotBlank(message = "Color of faculty is empty")
     private String color;
-
-    public FacultyRecord(){
-
-    }
-
-    public FacultyRecord(Long id, String name, String color) {
-        this.id = id;
-        this.name = name;
-        this.color = color;
-    }
-
     public Long getId() {
         return id;
     }

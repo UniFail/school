@@ -9,9 +9,10 @@ import ru.hogwarts.school.records.FacultyRecord;
 import ru.hogwarts.school.records.StudentRecord;
 import ru.hogwarts.school.service.StudentService;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
-
+//Контроллеры первый слой данных не правильно использовать Сущности в контроллере по этому используем рекорды
 @RestController
 @RequestMapping("/student")
 public class StudentController {
@@ -19,50 +20,49 @@ public class StudentController {
     private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
+
         this.studentService = studentService;
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Student> getStudentInfo(@PathVariable Long id) {
-        Student student = studentService.findStudent(id);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(student);
+    public StudentRecord read(@PathVariable Long id) {
+        return studentService.read(id);
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
-        return studentService.addStudent(student);
+    public StudentRecord create(@RequestBody @Valid StudentRecord studentRecord) {
+        return studentService.create(studentRecord);
     }
 
-    @PutMapping
-    public ResponseEntity<StudentRecord> editStudent(@RequestBody long id,StudentRecord student) {
-        StudentRecord foundStudent = studentService.editStudent(id,student);
-        if (foundStudent == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(foundStudent);
+    @PutMapping("/{id}")
+    public StudentRecord update(@PathVariable long id,
+                               @RequestBody @Valid  StudentRecord student) {
+        return studentService.update(id,student);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable long id) {
-        studentService.deleteStudent(id);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/{id}")
+    public StudentRecord delete(@PathVariable long id) {
+        return studentService.delete(id);
     }
 
-    @GetMapping
+    @GetMapping(params = "age")
     public Collection<StudentRecord> findByAge(@RequestParam Integer age){
         return studentService.findByAge(age);
     }
-    @GetMapping
-    public Collection<StudentRecord> findByAgeBetween(@RequestParam Integer min,@RequestParam Integer max){
+    @GetMapping(params = {"minAge", "maxAge"})
+    public Collection<StudentRecord> findByAgeBetween(@RequestParam Integer min,
+                                                      @RequestParam Integer max){
         return studentService.findByAgeBetween(min,max);
     }
 
     @GetMapping("/{id}/faculty")
-    public Collection<FacultyRecord> getFacultyByStudent(@RequestParam Long id){
+    public FacultyRecord getFacultyByStudent(@RequestParam long id){
+        return studentService.getFacultyByStudent(id);
+    }
 
-        return studentService.getStudentsByFaculty(id);
+    @PatchMapping("/{id}/avatar")
+    public StudentRecord patchStudentAvatar(@PathVariable long id,
+                                            @RequestParam("avatarId") long avatarId){
+        return studentService.patchStudentAvatar(id,avatarId);
     }
 }

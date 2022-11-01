@@ -9,6 +9,7 @@ import ru.hogwarts.school.records.FacultyRecord;
 import ru.hogwarts.school.records.StudentRecord;
 import ru.hogwarts.school.service.FacultyService;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -18,50 +19,45 @@ public class FacultyController {
     private final FacultyService facultyService;
 
     public FacultyController(FacultyService facultyService) {
+
         this.facultyService = facultyService;
+
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable Long id) {
-        Faculty faculty = facultyService.findFaculty(id);
-        if (faculty == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(faculty);
+    @GetMapping("/{id}")
+    public FacultyRecord read(@PathVariable Long id) {
+        return facultyService.read(id);
     }
 
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty) {
-        return facultyService.addFaculty(faculty);
+    public FacultyRecord create(@RequestBody @Valid FacultyRecord facultyRecord) {
+        return facultyService.create(facultyRecord);
     }
 
-    @PutMapping
-    public ResponseEntity<FacultyRecord> editFaculty(@RequestBody Long id, FacultyRecord faculty) {
-        FacultyRecord foundFaculty = facultyService.editFaculty(id,faculty);
-        if (foundFaculty == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(foundFaculty);
+    @PutMapping("/{id}")
+    public FacultyRecord update(@PathVariable Long id,
+                               @RequestBody @Valid FacultyRecord facultyRecord) {
+        return facultyService.update(id,facultyRecord);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
-        facultyService.deleteFaculty(id);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/{id}")
+    public FacultyRecord delete(@PathVariable Long id) {
+        return  facultyService.delete(id);
+
     }
 
-    @GetMapping
-    public Collection<FacultyRecord> findByColor(String color){
+    @GetMapping(params = "color")
+    public Collection<FacultyRecord> findByColor(@RequestParam String color){
         return facultyService.findByColor(color);
     }
 
-    @GetMapping(params = "NameOrColor")
+    @GetMapping(params = "nameOrColor")
     public Collection<FacultyRecord> findByNameOrColor(@RequestParam String nameOrName){
         return facultyService.findByNameOrColor(nameOrName);
     }
 
     @GetMapping("/{id}/students")
-    public Collection<StudentRecord> getStudentByFaculty(@PathVariable Long id){
+    public Collection<StudentRecord> getStudentByFaculty(@PathVariable long id){
         return facultyService.getStudentsByFaculty(id);
     }
 }

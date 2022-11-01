@@ -3,24 +3,31 @@ package ru.hogwarts.school.model;
 import javax.persistence.*;
 import java.util.Objects;
 @Entity
+//Информация о таблице
+@Table(name = "students")
 public class Student {
     @Id
-    @GeneratedValue
+    //Стратегия генерации первичного ключа strategy = GenerationType.IDENTITY
+    //IDENTITY - типо автоинкримент
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     int age;
 
     @ManyToOne
     private Faculty faculty;
+    @OneToOne Avatar avatar;
 
+    //Конструктор по умолчанию для работы гибернета
+    //Нужен если есть собственный конструктор класса
+    public Student() {
+    }
+
+    //Собственный конструктор класса
     public Student(Long id, String name, int age) {
         this.id = id;
         this.name = name;
         this.age = age;
-    }
-
-    public Student() {
-
     }
 
     public Long getId() {
@@ -33,6 +40,14 @@ public class Student {
 
     public String getName() {
         return name;
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
     }
 
     public void setName(String name) {
